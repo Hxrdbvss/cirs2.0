@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls',
+    'survey_creator',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +77,12 @@ WSGI_APPLICATION = 'survey.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+           'NAME': 'survey',          # имя БД
+           'USER': 'glebs',        # твой пользователь
+           'PASSWORD': 'нет', # пароль
+           'HOST': 'localhost',        # или IP сервера
+           'PORT': '5432',             # порт по умолчанию
     }
 }
 

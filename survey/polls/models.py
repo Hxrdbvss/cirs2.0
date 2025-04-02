@@ -13,25 +13,28 @@ class Question(models.Model):
         ('checkbox', 'Множественный выбор (checkbox)'),
         ('text', 'Текстовый ответ'),
     )
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
-    text = models.CharField(max_length=200)
-    question_type = models.CharField(max_length=10, choices=QUESTION_TYPES, default='radio')
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='questions')
+    question_text = models.CharField(max_length=200)
+    question_type = models.CharField(max_length=20, choices=QUESTION_TYPES, default='radio')
 
     def __str__(self):
-        return self.text
+        return self.question_text
 
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')  # Заменил Poll на Question
     text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.text
 
-class TextResponse(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    response = models.TextField()
-    submitted_at = models.DateTimeField(auto_now_add=True)
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True, blank=True)
+    text_answer = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.question.text}: {self.response[:50]}"
+        return f"Ответ на {self.question} - {self.choice or self.text_answer}"
+
+
